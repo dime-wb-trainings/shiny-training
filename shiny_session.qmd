@@ -408,6 +408,7 @@ knitr::include_graphics("images/app_edit.png")
 
 ```
 
+- The app with the modifications is available [here](https://github.com/dime-wb-trainings/shiny-training/blob/main/example_single/app.R)
 
 ---
 
@@ -751,7 +752,7 @@ downloadButton("download_data", "Download Data")
 
 ### `server.R`
 
-```
+```r
 output$download_data <- downloadHandler(
   filename = function() { "faithful_data.csv" },
   content = function(file) {
@@ -764,10 +765,33 @@ output$download_data <- downloadHandler(
 
 ## Share your Shiny app 
 
-You can share your Shiny app with others by deploying it to a server. Here are some options:
+### 🏢 On-Premises & VPC Deployment (Most Secure)
 
-- **Shinyapps.io**: A cloud service for hosting Shiny apps. Free tier available.
+- **Posit Connect (Internal / Commercial)**  
+  - Recommended option for **secure deployment within the Bank**  
+  - Push-button publishing from RStudio  
+  - [Learn more](https://posit.co/products/enterprise/connect/)
 
+- **Shiny Server (Open Source)**  
+  - Deploy behind a firewall  
+  - Ideal for lightweight internal hosting  
+  - [More info](https://posit.co/download/shiny-server/)
+
+---
+
+## Share your Shiny app 
+
+### 🌐 Cloud Deployment Options
+
+- **Posit Connect Cloud**  
+  - Publish from GitHub in under a minute  
+  - [Free and paid plans](https://posit.cloud/connect)
+
+- **Shinyapps.io**  
+  - Easiest way to publish Shiny apps online  
+  - No server setup or installation needed  
+  - Secure and scalable, but **not for sensitive data**  
+  - [Free and paid plans](https://www.shinyapps.io/)
 
 ---
 
@@ -781,19 +805,17 @@ You can share your Shiny app with others by deploying it to a server. Here are s
 
 Want to go further with Shiny? Here are some helpful resources:
 
-- 🧪 **Shiny Tutorial** (Official Getting Started Guide)  
-  [https://shiny.posit.co/tutorial](https://shiny.posit.co/tutorial)
+- 🧪 **Shiny Tutorial** (Official Getting Started Guide) [here](https://shiny.posit.co/tutorial)  
 
-- 📘 **Mastering Shiny** by Hadley Wickham (Free online book)  
-  [https://mastering-shiny.org](https://mastering-shiny.org)
+- 📘 **Mastering Shiny** by Hadley Wickham (Free online book) [here](https://mastering-shiny.org) 
 
-- 💡 **Shiny Widgets Gallery**  
-  [https://shiny.posit.co/r/gallery/widgets/widget-gallery/](https://shiny.posit.co/r/gallery/widgets/widget-gallery/)
+- 💡 **Shiny Widgets Gallery**  [here](https://shiny.posit.co/r/gallery/widgets/widget-gallery/)
 
-- 🧩 **Awesome Shiny Extensions** (Community plugins)  
-  [https://github.com/nanxstats/awesome-shiny-extensions](https://github.com/nanxstats/awesome-shiny-extensions)
+- 🧩 **Awesome Shiny Extensions** (Community plugins)  [here](https://github.com/nanxstats/awesome-shiny-extensions)
   
-- 🌐 **Shiny Community** (Forums, discussions)
-  [https://community.rstudio.com/c/shiny](https://community.rstudio.com/c/shiny)
+- 🌐 **Shiny Community** (Forums, discussions) [here](https://community.rstudio.com/c/shiny)
+  
+- 📦 **Building Web Applications** (Training) [here](https://rstudio-education.github.io/shiny-course/)
+
 
 
