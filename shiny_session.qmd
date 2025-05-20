@@ -5,7 +5,6 @@ author: "DIME Analytics"
 institute: Development Impact Evaluation (DECDI)
 date: today
 date-format: "dddd, [the] D[<sup style='font-size:65%;font-style:italic;'>th</sup>] [of] MMMM, YYYY"
-bibliography: bib/template.bib
 format:
   dime-revealjs:
     # Output file
@@ -67,10 +66,10 @@ Welcome to this interactive Shiny session! In the next 90 minutes, we will:
 ## Let's Do This! 🚀
 
 This session is **live at**:
-🔗 *\[https://ce-wb-shiny.netlify.app/]*
+🔗 *https://ce-wb-shiny.netlify.app*
 
-You can find the **final solutions** (both single-file and multiple-file apps) in our GitHub repository:
-📦 *\[pending]*
+You can find the **quarto presentation** and the **final solutions** (both single-file and multiple-file apps) in our GitHub repository:
+📦 *https://github.com/dime-wb-trainings/shiny-training*
 
 
 ![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHMxMjZyb3d0Y3QzbTJtbzl6ajI5NHNxOTN2Y3l3Z2s0YjduOG55diZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LQ3cfzLDUQnfEWChJx/giphy.gif)
@@ -516,7 +515,7 @@ Let’s improve the layout and presentation of your app!
 ### 🔍 Hint:
 
 ```r
-title("Faithful Geyser Data - Customized"),
+titlePanel("Faithful Geyser Data - Customized"),
 h3("Exploring waiting times between eruptions")
 ```
 
@@ -760,6 +759,15 @@ output$download_data <- downloadHandler(
   }
 )
 ```
+
+---
+
+## Share your Shiny app 
+
+You can share your Shiny app with others by deploying it to a server. Here are some options:
+
+- **Shinyapps.io**: A cloud service for hosting Shiny apps. Free tier available.
+
 
 ---
 
