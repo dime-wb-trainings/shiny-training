@@ -66,10 +66,10 @@ Welcome to this interactive Shiny session! In the next 90 minutes, we will:
 ## Let's Do This! 🚀
 
 This session is **live at**:
-🔗 *https://ce-wb-shiny.netlify.app*
+🔗 [*https://ce-wb-shiny.netlify.app*](https://ce-wb-shiny.netlify.app/)
 
 You can find the **quarto presentation** and the **final solutions** (both single-file and multiple-file apps) in our GitHub repository:
-📦 *https://github.com/dime-wb-trainings/shiny-training*
+📦 [*https://github.com/dime-wb-trainings/shiny-training*](https://github.com/dime-wb-trainings/shiny-training)
 
 
 ![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHMxMjZyb3d0Y3QzbTJtbzl6ajI5NHNxOTN2Y3l3Z2s0YjduOG55diZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LQ3cfzLDUQnfEWChJx/giphy.gif)
@@ -760,6 +760,8 @@ output$download_data <- downloadHandler(
   }
 )
 ```
+
+- The multiple file app with all the exercises we did is available [here](https://github.com/dime-wb-trainings/shiny-training/tree/main/example_multiple)
 
 ---
 
