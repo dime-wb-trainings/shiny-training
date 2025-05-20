@@ -1,0 +1,690 @@
+---
+title: "Quarto World Bank Theme"
+subtitle: "A minimalist theme for Quarto/Reveal.js presentations for the World Bank"
+author: "[Bernhard Bieri](https://bernhardbieri.ch)"
+institute: The World Bank
+date: today
+date-format: "dddd, [the] [<sup style='font-size:65%;font-style:italic;'>th</sup>] [of] MMMM, YYYY"
+bibliography: bib/template.bib
+format:
+  worldbank-revealjs:
+    # Output file
+    output-file: index_WB.html
+    # Table of Contents
+    toc: true
+    toc_float: true
+    toc-depth: 1
+    toc-location: body
+    toc-title: "Contents"
+    # Generate a self contained file
+    self-contained: true
+    self-contained-math: true
+    # Logo and footer options
+    logo: "logos/WB-WBG-horizontal-RGB.png"
+    footer: "[World Bank](https://github.com/worldbank) theme for [Quarto Presentations](https://quarto.org/docs/presentations/revealjs/index.html). Code available on [GitHub](https://github.com/dime-worldbank/quarto-dime-theme)."
+---
+
+```{r}
+#| include: false
+# Add default ggplot theme. This can be overridden by your own theme at
+# the end of the ggplot graph.
+source("_extensions/worldbank/setup_wb_palettes.R")
+source("_extensions/worldbank/setup_ggplot2_wb.R")
+# Install the reticulate package to render Python code.
+# install.packages("reticulate")
+# use_python("C:/Python311/python.exe")
+# Link your conda environment
+reticulate::use_condaenv("quarto-dime-theme")
+```
+
+## Authors
+
+:::: {.columns .vh-center-container}
+
+::: {.column width="33%"}
+<img src="https://img.icons8.com/cotton/64/null/gender-neutral-user--v3.png"/>
+
+**Author 1**
+
+Affiliation
+:::
+
+::: {.column width="33%"}
+<img src="https://img.icons8.com/cotton/64/null/gender-neutral-user--v3.png"/>
+
+**Author 2**
+
+Affiliation
+:::
+
+::: {.column width="34%"}
+<img src="https://img.icons8.com/cotton/64/null/gender-neutral-user--v3.png"/>
+
+**Author 3**
+
+Affiliation
+:::
+
+::::
+
+## Introducing the World Bank's Quarto theme
+
+This presentation template accelerates the creation of
+[Reveal.js](https://revealjs.com/) presentations by taking care of the
+formatting of your presentations so that users can focus on the **content**.
+
+## What is Quarto?
+
+Quarto enables you to weave together text written in Markdown and
+executable code into a finished publication-ready document. Quarto is a
+**language agnostic** making it ideal for research teams working with
+different languages such as Python and R.
+
+> To learn more about Quarto presentations specifically see <https://quarto.org/docs/presentations/>.
+
+## Why Quarto? What about Rmd presentations? {auto-animate="true"}
+
+- Yihui Xie has [a neat blog post](https://yihui.org/en/2022/04/quarto-r-markdown/) explaining the difference between the two ways of rendering presentations.
+- Quarto also has [a nice FAQ thread](https://quarto.org/docs/faq/rmarkdown.html) on their website about the differences between `.Rmd` and Quarto documents.
+-  **Key Insight 1:** While there is no obvious need for existing `.Rmd` users to switch yet, Quarto's new features will most likely not be backported to `.Rmd`.
+-  **Key Insight 2:** The present template can easily be used by folks running their analysis in Python thanks to the language agnostic nature of Quarto!
+
+# The Basics! {background-color="#07202E"}
+
+## Bullets
+
+When you click the **Render** button a document will be generated that includes:
+
+-   Content authored with markdown
+-   Output from executable code
+
+> This is part of the [Quarto documentation](https://quarto.org/docs/presentations/).
+
+## R Code
+
+When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code.
+You can embed code like this:
+
+```{r}
+#| echo: true
+1 + 1
+```
+
+> This is part of the [Quarto documentation](https://quarto.org/docs/presentations/).
+
+You can also add `text marked as code`!
+
+## Integrated Python within an R Quarto Presentation with `{reticulate}` {auto-animate="true" .scrollable}
+
+You can even render content written in Python directly thanks to the `{reticulate}` R-package and a Python installation.
+
+```{python}
+#| label: fig-polar
+#| fig-cap: "A line plot on a polar axis"
+#| code-fold: true
+#| echo: true
+
+# Do not forget to create an environment with numpy and pyplot installed and
+# import it with reticulate at the start of the .qmd file.
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+r = np.arange(0, 2, 0.01)
+theta = 2 * np.pi * r
+fig, ax = plt.subplots(
+  subplot_kw = {'projection': 'polar'} 
+)
+ax.plot(theta, r)
+ax.set_rticks([0.5, 1, 1.5, 2])
+ax.grid(True)
+plt.show()
+```
+
+
+## Equations
+
+Adding Latex style equations is straightforward. Here is Euler's identity:
+
+$$
+\begin{equation}
+e^{i\pi} + 1 = 0
+\end{equation}
+$$
+
+. . .
+
+And here is Shepherd's lemma:
+
+$$
+\begin{equation}
+\frac{P_1 - P_2}{Q_1 - Q_2} > \frac{P_1 - P_3}{Q_1 - Q_3}
+\end{equation}
+$$
+
+## Images
+
+Adding images is easy, simply type `![Photo Description](path\to\image)`, et
+voilà!
+
+![](https://cdn.pixabay.com/photo/2019/06/21/19/27/switzerland-4290226_960_720.jpg)
+
+Source: [Link](https://cdn.pixabay.com/photo/2019/06/21/19/27/switzerland-4290226_960_720.jpg)
+
+## Background image {background-image="train.jpg"}
+
+[Source: [Link](https://cdn.pixabay.com/photo/2012/10/25/23/18/train-62849_960_720.jpg)]{.absolute bottom=0 left=0}
+
+# Advanced Layouts! {background-color="#07202E" background-opacity="0.8"}
+
+To make a "section" slide like this, use:
+
+    # Title of slide {background-color="#07202E"}
+
+## Tabset example
+
+::: panel-tabset
+## Example 1
+
+Content here for tabset 1 :)
+
+## Example 2
+
+More content here, for tabset 2 :)
+:::
+
+## Incremental content
+
+Hi! 
+
+. . .
+
+
+Use `. . .` to separate content as an incremental slide!
+
+## You can add R code to plot data...
+
+```{r}
+#| echo: true
+library(dplyr)
+library(ggplot2)
+g <- starwars |> 
+  ggplot() +
+  geom_point(aes(x = height, y = mass)) +
+  theme_wb()
+```
+
+## You can add R code to plot data...and focus on (a) specific line(s):
+
+```{r}
+#| echo: true
+#| code-line-numbers: "4-6"
+library(dplyr)
+library(ggplot2)
+
+starwars <- starwars |>
+  dplyr::mutate(name = ifelse(name %in% c("Jabba Desilijic Tiure", "Tarfful"),
+                              name, ""))
+
+g <- starwars |>
+  ggplot() +
+  geom_point(aes(x = height, y = mass, col = sex)) +
+  ggrepel::geom_text_repel(aes(x = height,
+                               y = mass,
+                               label = name),
+                           max.overlaps = 100) +
+  labs(title = "Star Wars Example",
+       caption = "Star Wars Example Dataset",
+       col = "Sex") +
+  theme_wb()
+```
+
+> See the [Quarto Documentation for more details.](https://quarto.org/docs/presentations/revealjs/#code-blocks)
+
+## Before showing the results :)
+
+```{r}
+#| fig.align: center
+#| echo: true
+g
+```
+
+## A World Bank color palette
+
+The theme also contains a World Bank color palette and a color generator to make
+graphs more uniform and easier to generate. `wb_palette()` yields a named vector
+with the HEX codes of the corresponding colors for an easy integration in
+`{ggplot2}` graphs.
+
+```{r}
+#| fig.align: center
+#| echo: true
+#| fig-height: 1.5
+# The default discrete DIME color palette
+wb_palette(name = "DIME", 5, type = "discrete")
+
+# A continuous palette based on the DIME palette
+wb_palette(name = "DIME", 21, type = "continuous")
+```
+
+## A few more penguin examples {.scrollable}
+
+Let's create a few more plots using the great `{palmerpenguins}` dataset and
+illustrate Simpson's Paradox. These examples are inspired by
+[this great talk](https://apreshill.github.io/palmerpenguins-useR-2022).
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{r}
+#| fig.align: center
+#| echo: false
+
+penguins <- palmerpenguins::penguins
+
+penguins |>
+  ggplot(aes(bill_length_mm, bill_depth_mm)) +
+  geom_point() +
+  geom_smooth(method = lm,
+              formula = y ~ x,
+              se = F) +
+  labs(title = "Palmer Penguins: Simpson's Paradox",
+       caption = "Palmer Penguins Dataset",
+       x = "Bill Length (mm)",
+       y = "Bill Depth (mm)",
+       col = "Species") +
+  theme_wb()
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig.align: center
+#| echo: false
+
+penguins <- palmerpenguins::penguins
+
+penguins |>
+  ggplot(aes(bill_length_mm, bill_depth_mm, col = species)) +
+  geom_point() +
+  geom_smooth(method = lm,
+              formula = y ~ x,
+              se = F) +
+  ggpubr::stat_regline_equation(
+    aes(label =  paste(..eq.label.., ..adj.rr.label.., sep = "~~~~")),
+    formula = formula
+  ) +
+  labs(title = "Palmer Penguins: Simpson's Paradox",
+       caption = "Palmer Penguins Dataset",
+       x = "Bill Length (mm)",
+       y = "Bill Depth (mm)",
+       col = "Species") +
+  theme_wb()
+```
+:::
+
+::::
+
+## Creating interactive graphs with Observable JS {.scrollable .small}
+
+Another way of creating interactive visualizations within your presentations
+is to use [Observable JS](https://observablehq.com/), a Java Script framework
+developed by the creators of [D3.js](https://d3js.org/). See the [Quarto
+documentation](https://quarto.org/docs/interactive/ojs/) for more details.
+
+```{ojs}
+data = FileAttachment("data/palmer-penguins.csv").csv({ typed: true })
+```
+
+```{ojs}
+//| panel: sidebar
+
+// Function to filter data
+filtered = data.filter(function(penguin) {
+  return bill_length_min < penguin.bill_length_mm &&
+         islands.includes(penguin.island);
+})
+
+viewof bill_length_min = Inputs.range(
+  [32, 50], 
+  {value: 35, step: 1, label: "Bill length (min):"}
+)
+viewof islands = Inputs.checkbox(
+  ["Torgersen", "Biscoe", "Dream"], 
+  { value: ["Torgersen", "Biscoe"], 
+    label: "Islands:"
+  }
+)
+```
+
+```{ojs}
+Plot.rectY(filtered, 
+  Plot.binX(
+    {y: "count"}, 
+    {x: "body_mass_g", fill: "species", thresholds: 20}
+  ))
+  .plot({
+    facet: {
+      data: filtered,
+      x: "sex",
+      y: "species",
+      marginRight: 80
+    },
+    marks: [
+      Plot.frame(),
+    ]
+  }
+)
+```
+
+## Penguin regression tables
+
+:::: {.columns .vh-center-container}
+
+::: {.column width="40%"}
+
+$$
+\text{Bill Depth}_{i} = \alpha + \beta \times \text{Bill Length}_{i} + \epsilon_i
+$$
+
+```{r}
+#| fig.align: center
+#| echo: false
+
+fullmodel <- lm(bill_depth_mm ~ bill_length_mm, penguins)
+huxtable::huxreg(fullmodel) |>
+  huxtable::set_font_size(11) # Smaller font size to fit on slide
+```
+:::
+
+:::{.column width="40%"}
+
+$$
+\text{Bill Depth}_{i, k} = \alpha_k + \beta_k \times \text{Bill Length}_{k, i} + \epsilon_i \\
+\text{where}\ k = \text{"Gentoo"}
+$$
+
+```{r}
+#| fig.align: center
+#| echo: false
+
+gentoomodel <- lm(bill_depth_mm ~ bill_length_mm,
+                  dplyr::filter(penguins, species == "Gentoo"))
+huxtable::huxreg(gentoomodel) |>
+  huxtable::set_font_size(11) # Smaller font size to fit on slide
+```
+
+:::
+
+::::
+
+## What about other tables? {.smaller}
+
+### `knitr::kable()`
+
+::: {.columns .h-center-container}
+::: {.column width="45%"}
+```{r}
+#| label: kable-ex
+#| echo: true
+#| eval: false
+tab <- starwars |>
+  tidyr::drop_na(species) |> 
+  group_by(species) |>
+  summarise(
+    n = n(),
+    mean_heigth = round(mean(height, na.rm = TRUE)),
+    mean_mass = round(mean(mass, na.rm = TRUE))
+  ) |> 
+  slice_max(order_by = n, n = 4) 
+
+knitr::kable(tab)
+```
+:::
+
+::: {.column width="45%"}
+```{r}
+#| label: kable-ex
+#| eval: true
+```
+:::
+:::
+
+## `DT::datatable()` {.smaller}
+
+With the `smaller` class in the slide!
+Ex: `## slide name {.smaller}`
+
+```{r}
+DT::datatable(tab, options = list(pageLength = 5))
+```
+
+## `gt::gt()`
+
+```{r}
+gt::gt(tab)
+```
+
+## `reactable::reactable()`
+
+```{r}
+reactable::reactable(tab)
+```
+
+## Map using `ggplot2::ggplot()` and `{osmdata}`
+
+```{r}
+library(sf)
+library(osmdata)
+library(tidyverse)
+
+# Get DC borders
+dcosmborders <- getbb("washington dc", format_out = "sf_polygon")
+dcosmborders <- dcosmborders[1,] # Only main polygon
+
+# Get big streets
+streets <- getbb("washington dc") |>
+  opq() |>
+  add_osm_feature(key = "highway",
+                  value = c("motorway", "primary",
+                            "secondary", "tertiary")) |>
+  osmdata_sf()
+streets <- streets$osm_lines |>
+  st_intersection(dcosmborders)
+
+# Water polygons
+water <- getbb("washington dc") |>
+  opq() |>
+  add_osm_feature("water", "river") |>
+  osmdata_sf()
+water_poly <- water$osm_polygons |>
+  st_intersection(dcosmborders)
+water_multipoly <- water$osm_multipolygons |>
+  st_intersection(dcosmborders)
+
+# University polygons
+university <- getbb("washington dc") |>
+  opq() |>
+  add_osm_feature("amenity", "university") |>
+  osmdata_sf()
+university <- university$osm_polygons |>
+  st_intersection(dcosmborders)
+
+# Cafes
+cafe <- getbb("washington dc") |>
+  opq() |>
+  add_osm_feature("amenity", "cafe") |>
+  osmdata_sf()
+cafe <- cafe$osm_points |>
+  st_intersection(dcosmborders)
+
+title <- "<span style='font-family:Arial;font-size:10pt;'>**Washington, DC**</span><br>
+<span style='font-size:6pt;'>Map of <span style='font-size:7pt; color:#D1BE9C'>University Campuses</span><br>and <span style='font-size:7pt; color:#EBB9DF'>Cafes</span> in Washington, DC.</span>"
+
+ggplot() +
+  geom_sf(data = dcosmborders,
+          color = "#834ba0",
+          fill = "#834ba0") +
+  geom_sf(
+    data = streets,
+    inherit.aes = FALSE,
+    color = "#ce78b3",
+    size = .4
+  ) +
+  geom_sf(
+    data = water_poly,
+    inherit.aes = FALSE,
+    color = "#00E5E8",
+    fill = "#00E5E8"
+  ) +
+  geom_sf(
+    data = water_multipoly,
+    inherit.aes = FALSE,
+    color = "#00E5E8",
+    fill = "#00E5E8"
+  ) +
+  geom_sf(
+    data = university,
+    inherit.aes = F,
+    fill = "#D1BE9C",
+    color = "#D1BE9C"
+  ) +
+  geom_sf(
+    data = cafe,
+    fill = "#EBB9DF",
+    color = "#EBB9DF",
+    size = 0.65,
+    alpha = 0.75
+  ) +
+  scale_y_continuous(limits = c(38.79163, 38.99597)) +
+  scale_x_continuous(limits = c(-77.11979, -76.90937)) +
+  ggtext::geom_richtext(
+    aes(x = -77.09, y = 38.855, label = title),
+    color = "white",
+    label.color = NA,
+    fill = NA
+  ) +
+  labs(caption = "Map Data Source: OpenStreetMap Contributors") +
+  theme_void() +
+  theme(
+    text = element_text(color = "white"),
+    plot.caption = element_text(color = "#ad5fad", size = 5, hjust = 0.95),
+    plot.background = element_rect(fill = "#573b88", color = NA),
+    plot.margin = margin(
+      t = 10,
+      b = 10,
+      l = 10,
+      r = 10
+    )
+  )
+```
+ 
+## Interactive maps using `{leaflet}`
+
+```{r echo=TRUE}
+#| fig-height: 3
+
+# Example taken from the leaflet package website
+library(leaflet)
+
+m <- leaflet(width = "100%") |>
+  addTiles() |>  # Add default OpenStreetMap map tiles
+  addMarkers(lng = 174.768,
+             lat = -36.852,
+             popup = "The birthplace of R")
+m  # Print the map
+```
+
+
+## Slide with speaker notes
+
+Adding speaker notes is easily done by creating a slide containing a div with class `.notes`, e.g.:
+
+```
+## Slide with speaker notes
+
+Slide content
+
+::: {.notes}
+Speaker notes go here.
+:::
+```
+
+When in presentation mode, you can access the speaker notes by pressing `s` on your keyboard.
+
+::: {.notes}
+Speaker notes go here.
+:::
+
+## Creating an automatic bibliography:
+
+Research is almost always built upon existing knowledge. Acknowledging the latter is therefore key. Quarto allows this bz specifying `bibliography: bibfile.bib` in the YAML header.
+
+One can then add citations with the @ key [@arrowReviewOrdinalistUtilitarianNotes1973]. To generate the bibliography simply insert a slide with:
+
+```
+## References
+
+::: {#refs}
+:::
+```
+
+> See the [Quarto documentation entry on citations](https://quarto.org/docs/authoring/footnotes-and-citations.html#citations) for more details.
+
+## References
+
+::: {#refs}
+:::
+
+# Present and Share your Presentation with the World! {background-color="#07202E"}
+
+## Presenting your rendered presentation
+
+Rendering your presentation by pressing `CTRL/CMD + K` or the `render` button
+at the top of the `.qmd` file will create either a self-contained HTML
+presentation or an HTML file plus a folder with all supporting files
+needed by your presentation depending on whether `embed-resources:` is
+set to `true` or not in the YAML header.
+
+To present your slides locally, simply open the `html` file in your favorite
+browser. Don't forget to check out the key-bindings by typing `?` once your
+presentation is open in your browser.
+
+## Sharing your HTML presentation online
+
+Sharing your HTML presentation takes one line of code! Open up a terminal and
+type the following line to deploy your presentation to Netlify. This requires
+a free [Netlify](https://www.netlify.com/) account to work.
+
+```
+quarto publish netlify yourpresentation.qmd
+```
+
+> See the [Quarto documentation for additional ways of publishing your presentation](https://quarto.org/docs/output-formats/html-publishing.html#standalone-html).
+
+## Exporting into PDF
+
+You can use the function `pagedown::chrome_print()` to print the HTML version
+into a PDF!
+
+```r
+# install.packages("pagedown")
+pagedown::chrome_print("path-to-file.html")
+```
+
+## Acknowlegements
+
+This presentation and the template it showcases are inspired from the following
+creators. Check out their great themes.
+
+- [The RLadies theme](https://beatrizmilz.github.io/quarto-rladies-theme)
+- [The coeos theme](https://github.com/mcanouil/quarto-revealjs-coeos)
+- [Hrbrmstr's minimalistic `{ggplot}` themes](https://github.com/hrbrmstr/hrbrthemes)
+
+## Useful Resources
+
+Want to go further? Here are some great resources to get you started:
+
+- [Presenting Quarto Slides Documentation](https://quarto.org/docs/presentations/revealjs/presenting.html)
+- [The Advanced Quarto/Reveal Documentation](https://quarto.org/docs/presentations/revealjs/advanced.html)
+- [A Quarto Tip a Day](https://mine-cetinkaya-rundel.github.io/quarto-tip-a-day/)

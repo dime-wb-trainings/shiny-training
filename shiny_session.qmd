@@ -1,0 +1,791 @@
+---
+title: "Shiny: Introduction"
+subtitle: "Continuing Education - DIME Analytics"
+author: "DIME Analytics"
+institute: Development Impact Evaluation (DECDI)
+date: today
+date-format: "dddd, [the] D[<sup style='font-size:65%;font-style:italic;'>th</sup>] [of] MMMM, YYYY"
+bibliography: bib/template.bib
+format:
+  dime-revealjs:
+    # Output file
+    output-file: index.html
+    # Table of Contents
+    toc: true
+    toc_float: true
+    toc-depth: 1
+    toc-location: body
+    toc-title: "Contents"
+    # Generate a self contained file
+    self-contained: true
+    self-contained-math: true
+    # Turn preview links within the presentation off (all links open in a new tab)
+    preview-links: false
+    # Logo and footer options
+    logo: "logos/DIME_ANALYTICS.png"
+    footer: "[DIME](https://www.worldbank.org/dime) theme for [Quarto Presentations](https://quarto.org/docs/presentations/revealjs/index.html). Code available on [GitHub](https://github.com/dime-worldbank/quarto-dime-theme)."
+    
+---
+
+```{r Setup}
+#| include: false
+# Add default ggplot theme. This can be overridden by your own theme at
+# the end of the ggplot graph.
+
+# DIME:
+source("_extensions/dime/setup_dime_palettes.R")
+source("_extensions/dime/setup_ggplot2_dime.R")
+# Worldbank:
+# source("_extensions/dime/setup_dime_palettes.R")
+# source("_extensions/dime/setup_ggplot2_dime.R")
+
+# Install R libraries
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(
+  dplyr, DT, ggplot2, ggpubr, ggrepel, ggtext, gt, here, huxtable, 
+  knitr, leaflet, osmdata, pacman, pagedown, palmerpenguins,
+  reactable, sf, tidyr, tidyverse
+)
+```
+
+---
+
+## Session Overview 📋
+
+Welcome to this interactive Shiny session! In the next 90 minutes, we will:
+
+1. **Understand what Shiny is** and why it's useful
+2. **Explore the structure** of a Shiny app: `UI` + `Server`
+3. **Create our first Shiny app together** using the built-in template
+4. Learn about **reactivity**, dynamic updates, and common **widgets**
+5. **Build a multiple-file app** (`ui.R`, `server.R`, `global.R`)
+6. Discover helpful **resources** and discuss your **next steps** 🚀
+
+
+---
+
+## Let's Do This! 🚀
+
+This session is **live at**:
+🔗 *\[https://ce-wb-shiny.netlify.app/]*
+
+You can find the **final solutions** (both single-file and multiple-file apps) in our GitHub repository:
+📦 *\[pending]*
+
+
+![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHMxMjZyb3d0Y3QzbTJtbzl6ajI5NHNxOTN2Y3l3Z2s0YjduOG55diZlcD12MV9naWZzX3NlYXJjaCZjdD1n/LQ3cfzLDUQnfEWChJx/giphy.gif)
+
+---
+
+## What Is Shiny?
+
+> Shiny is a web application framework for R that allows you to turn analyses into interactive web apps — all in R.
+
+![](images/shiny_logo.png)
+
+**Why use it?**
+
+- Easy to learn and use
+- Fast development cycle
+- Powerful for data visualization
+- Built on R (leverage your analysis directly)
+- Great for sharing insights interactively
+
+---
+
+## Anatomy of a Shiny App
+
+A Shiny app has two core components:
+
+- **UI (User Interface)**: Defines how the app looks
+- **Server**: Defines how the app works
+
+Apps are served to users via a host and port. The R session running the server reacts to user actions, computes results, and sends them back.
+
+![](images/diagram_structure.png)
+
+---
+
+## The Client, Host, and Server
+
+**Client**: The web browser where the user interacts with the app
+
+**Host:Port**: Shiny app is served at an IP (host) and port
+
+**Server**: Runs R session to monitor inputs and respond with outputs
+
+![](images/host_structure.png)
+---
+
+## Let's Build Our First App Together (with the help of the R template) ✍️
+
+**Step-by-step instructions:**
+
+1. Open RStudio
+2. If you haven’t already installed Shiny, run:
+```r
+install.packages("shiny")
+```
+3. Load the Shiny library:
+```r
+library(shiny)
+```
+4. Create a new Shiny Web App: Click on **File > New File > R Shiny Web App**
+
+
+
+```{r, echo=FALSE, out.width='85%'}
+# add image with size 
+knitr::include_graphics("images/new_app.png")
+
+```
+
+---
+
+## Let's Build Our First App Together (with the help of the R template) ✍️
+
+5\. Choose **Single File** option when prompted:
+
+```{r, echo=FALSE, out.width='40%'}
+# add image with size 
+knitr::include_graphics("images/single_file.png")
+
+```
+
+6\. Name your folder and click OK
+
+7\. Click **Run App** in the top-right corner
+
+8\. 🎉 You’re running your first Shiny app!
+
+---
+
+## Let's Explore the Code 🧠
+
+> Go to the app you just created and let's explore each element
+
+### 1. `ui` — User Interface
+```{.r source-line-numbers="1"}
+ui <- fluidPage( #<<
+  titlePanel("Old Faithful Geyser Data"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("bins", 
+                  "Number of bins:", 
+                  min = 1, 
+                  max = 50, 
+                  value = 30)
+    ),
+    mainPanel(
+      plotOutput("distPlot")
+    )
+  )
+)
+```
+
+**Layout elements**
+
+- **`fluidPage()`** is the container for the app interface, the layout in which your content is. This is the most common, but there are other types of layouts.
+
+
+---
+
+## Let's Explore the Code 🧠
+
+> Go to the app you just created and let's explore each element
+
+### 1. `ui` — User Interface
+```r
+ui <- fluidPage(
+  titlePanel("Old Faithful Geyser Data"),
+  sidebarLayout( #<<
+    sidebarPanel(
+      sliderInput("bins", 
+                  "Number of bins:", 
+                  min = 1, 
+                  max = 50, 
+                  value = 30)
+    ),
+    mainPanel(
+      plotOutput("distPlot")
+    )
+  )
+)
+```
+
+**Layout elements**
+
+- **`sidebarLayout()`** splits the layout into sidebar (sidebarPanel()) and main area (mainPanel()). This is also optional.
+
+---
+
+## Let's Explore the Code 🧠
+
+> Go to the app you just created and let's explore each element
+
+### 1. `ui` — User Interface
+```r
+ui <- fluidPage(
+  titlePanel("Old Faithful Geyser Data"),
+  sidebarLayout(
+    sidebarPanel( #<<
+      sliderInput("bins",  #<<
+                  "Number of bins:",  #<<
+                  min = 1, #<<
+                  max = 50, #<<
+                  value = 30) #<<
+    ),
+    mainPanel(
+      plotOutput("distPlot")
+    )
+  )
+)
+```
+
+**Page content**
+
+- **`sidebarPanel()`** contains one input field (`sliderInput()`) called “bins”. As you can infer from the name, this is a slider that lets a user choose a number. In this case, the number of histogram bins.
+
+---
+
+## Let's Explore the Code 🧠
+
+> Go to the app you just created and let's explore each element
+
+### 1. `ui` — User Interface
+
+```r
+ui <- fluidPage(
+  titlePanel("Old Faithful Geyser Data"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("bins", 
+                  "Number of bins:", 
+                  min = 1, 
+                  max = 50, 
+                  value = 30)
+    ),
+    mainPanel( #<<
+      plotOutput("distPlot") #<<
+    )
+  )
+)
+```
+
+**Page content**
+
+- **`mainPanel()`** contains a histogram (`plotOutput()`), which will be defined in the server function. The name of this histogram is “distPlot”
+
+---
+
+## Shiny Server Logic Explained ⚙️
+
+### 2. `server` — Server Logic
+
+```r
+server <- function(input, output) {
+  output$distPlot <- renderPlot({
+    x <- faithful[, 2]
+    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    
+    hist(x, breaks = bins, col = 'darkgray', border = 'white',
+         xlab = 'Waiting time to next eruption (in mins)',
+         main = 'Histogram of waiting times')
+  })
+}
+```
+The `server()` function takes two arguments:
+
+- `input`: a **reactive list** of input values from the UI
+- `output`: a **reactive list** where you assign render functions
+
+In the default Shiny app, the server creates one object: the histogram `distPlot`.
+
+- `output$distPlot` → creates the plot output using renderPlot()
+- `input$bins` → pulls the number from the slider input in the UI
+
+---
+
+## Shiny Server Logic Explained ⚙️
+
+### How Server Connects to UI 🧩
+
+Remember these connections?
+
+* `output$distPlot <- renderPlot()`
+  ↔ `plotOutput("distPlot")` in the **UI**
+
+* `input$bins`
+  ↔ `sliderInput("bins", ...)` in the **UI**
+
+This is what makes Shiny **reactive** — inputs update outputs automatically!
+
+---
+
+## A Look at Reactivity 🔄
+
+Shiny uses **reactive programming** — a way to make your app **automatically update** outputs when inputs change.
+
+```r
+output$outputId <- renderFunction({
+  # code that returns a value
+})
+```
+
+* **`outputId`**: Matches the ID of the output element in the UI (e.g., `plotOutput("distPlot")`)
+* **`renderFunction`**: A special function like `renderPlot()`, `renderTable()`, etc.
+* These automatically re-run whenever a related `input$...` changes!
+
+In our example:
+
+* `sliderInput("bins", ...)` → sets `input$bins`
+* `renderPlot()` → uses `input$bins` to create a histogram
+* Result: the histogram updates as the slider moves!
+
+---
+
+## How Inputs and Outputs React 🔁
+
+* **Reactive programming** lets your app respond to changes without needing to re-run code manually.
+* `input` and `output` behave like **reactive lists** — not regular R lists, but special objects in Shiny.
+* When a user selects a value on the slider, say **5**, Shiny stores it as `input$bins = 5`.
+* If the user changes it to **7**, Shiny automatically updates the `input` list — and any **render function** using it will re-execute.
+* This is why `output$distPlot <- renderPlot({ ... input$bins ... })` updates **instantly**.
+
+Together, `input`, `output`, and `render*()` functions form the **reactive backbone** of your app.
+
+---
+
+## Inputs & Outputs in Shiny 🧠
+
+Shiny apps are built by connecting **inputs** (from the UI) to **outputs** (rendered in the server).
+
+| Part     | Role                                    | Examples                        |
+| -------- | --------------------------------------- | ------------------------------- |
+| `ui`     | Define layout and inputs/outputs        | `sliderInput()`, `plotOutput()` |
+| `server` | Logic to render outputs based on inputs | `renderPlot()`, `renderText()`  |
+
+🔁 **Reactivity** connects them:
+
+* `input$...` pulls values from UI controls
+* `output$... <- render...()` generates dynamic content
+
+---
+
+## Common Input Widgets 🛠️️
+
+Shiny includes many built-in **widgets** to capture user input:
+
+| Widget           | Purpose                    | Example Use       |
+| ---------------- | -------------------------- | ----------------- |
+| `numericInput()` | Enter a number             | Age, price        |
+| `sliderInput()`  | Select from a range        | Histogram bins    |
+| `selectInput()`  | Choose from a list         | Country selector  |
+| `radioButtons()` | Choose one option          | Plot type         |
+| `textInput()`    | Enter text                 | Comments, filters |
+| `fileInput()`    | Upload a file              | CSV, Excel        |
+| `actionButton()` | Trigger an action manually | Run, Submit       |
+
+📚 See the full gallery:
+➡️ [Shiny Widgets Gallery](https://shiny.posit.co/r/gallery/widgets/widget-gallery/)
+
+---
+
+
+## Let's start with some basic modifications  ✍️
+
+### 1. Change the title of the app
+### 2. Change the number of bins to 20
+### 3. Change the color of the histogram to `#ca8dfd` (a shade of purple)
+
+---
+
+## Let's start with some basic modifications  ✍️
+
+After your modifications the app should look like this:
+```{r, echo=FALSE, out.width='40%'}
+# add image with size
+knitr::include_graphics("images/app_edit.png")
+
+```
+
+
+---
+
+## Behind the Scenes: Running a Shiny App ⚙️
+
+Before you close the app, check the **R console**. You'll see something like:
+
+```r
+#> Listening on http://127.0.0.1:3827
+```
+
+🔍 **What it means:**
+- `127.0.0.1` refers to your local machine ("localhost")
+- `3827` is a random port number
+- You can open the app in any browser using this address
+
+⛔ **While the app is running:**
+- The R console is blocked (no new commands allowed)
+- A stop sign appears in the RStudio toolbar
+
+🛑 **To stop the app:**
+- Click the stop sign icon
+- Press `Esc` (or `Ctrl + C` in terminal)
+- Close the Shiny app window
+
+---
+
+## Questions 
+
+![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExajJ2ZjYwaDJjd2E5c3hhaDA1Njd1MXY2N2RhaDYzcHBpMjBzYmVtYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xT0xeuOy2Fcl9vDGiA/giphy.gif)
+
+---
+
+## Building a Multiple -File App 🏗️
+
+As your app grows, managing everything in a **single file** becomes difficult. That’s why it’s a good idea to switch to a **multi-file structure** — this is the recommended approach.
+
+Let’s walk through how to set it up!
+
+1. In RStudio, go to  
+**`File > New File > Shiny Web App…`**
+
+2. This time, choose **"Multiple File"** when prompted:
+
+```{r, echo=FALSE, out.width='40%'}
+# add image with size
+knitr::include_graphics("images/multiple_file1.png")
+
+```
+
+
+---
+
+## Building a Multiple -File App 🏗️
+
+3\. Name your project folder and click OK. This will automatically create two files.
+
+```{r, echo=FALSE, out.width='40%'}
+# add image with size
+knitr::include_graphics("images/multiple_file2.png")
+
+```
+
+4\. Lastly let's create an extra file `global.R`. (Optional but recommended)
+This file is useful for loading packages and defining global objects or functions used by both `ui.R` and `server.R`.
+
+5\. Click the **Run App** button in the top-right corner of RStudio.
+
+Here’s a clearer and more engaging version of your slide:
+
+---
+
+## ✨ Now Let’s Make It More Interesting
+
+* You’ve set up a multiple-file **Shiny app**—great start! Now let’s **customize it together**.
+
+* We’ll go through a series of **hands-on exercises** using the `faithful` dataset to:
+
+  * Add new **UI components**
+  * Enhance **server logic**
+
+* After each exercise, we’ll do a **live walkthrough** to see how the changes integrate into the app.
+
+📝 **Note:**
+While we’re using the files created by RStudio as a starting point, you’re not limited to that setup.
+You can always:
+
+* Create a Shiny app by saving your own `.R` scripts as `ui.R` and `server.R`
+* Or combine everything into a single `app.R` file if you prefer that style
+
+---
+
+
+## Exercise 1: Add a Custom Title and Subtitle ✍️
+
+Let’s improve the layout and presentation of your app!
+
+### 📝 Your task:
+
+* In `ui.R`, replace the `titlePanel()` with:
+
+  * A custom **title** 
+  * A smaller **subtitle** using `h3()``
+
+### 🔍 Hint:
+
+```r
+title("Faithful Geyser Data - Customized"),
+h3("Exploring waiting times between eruptions")
+```
+
+---
+
+## Exercise 2: Add a Color Selector ✍️
+
+Let’s make the histogram more interactive!
+
+### 📝 Your task:
+
+* Add a `selectInput()` to the `sidebarPanel()` so users can choose a color for the histogram
+
+* Then use `input$color` inside `renderPlot()` to apply the color.
+
+### 🔍 Hint:
+
+```r
+ selectInput("color", "Choose a color:", choices = c("turquoise", "plum", "orchid"))
+```
+
+
+---
+
+## ✅ Solution: Exercise 2
+
+- Let's do this together. 
+
+See that if I don't add the `input$color` in the server inside the `hist()` function, the color will not change.
+
+```{r, echo=FALSE, out.width='40%'}
+knitr::include_graphics("images/app_color.png")
+```
+
+---
+
+## Exercise 3: Add a Plot Type Selector ✍️
+
+Ok! now let's make this more challenging! Let’s give the user control over the **type of plot** they see!
+
+### 📝 Your task:
+
+* Add a `radioButtons()` input to let the user choose between:
+
+  * `"Histogram"` of waiting times
+  * `"Scatterplot"` of eruption duration vs. waiting time
+* Modify `renderPlot()` in `server.R` to change behavior based on selection
+
+### 🔍 Hint:
+
+```r
+radioButtons("plot_type", "Choose a plot type:",
+             choices = c("Histogram", "Scatterplot"))
+```
+
+In `server.R`, check the value of `input$plot_type` to decide which plot to draw.
+
+---
+
+## ✅ Solution: Exercise 3
+
+### `ui.R`
+
+```r
+radioButtons("plot_type",
+             "Select a plot type:",
+             choices = c("Histogram" = "histogram", "Density" = "density"),
+             selected = "histogram")
+```
+
+---
+
+## ✅ Solution: Exercise 3  
+
+Full server logig: 
+
+### `server.R`
+
+```r
+function(input, output, session) {
+
+    output$distPlot <- renderPlot({
+
+        # generate bins based on input$bins from ui.R
+         x  <- faithful[, 2]
+        
+        if (input$plot_type == "Histogram") {
+        
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = input$color, border = 'white',
+             xlab = 'Waiting time to next eruption (in mins)',
+             main = 'Histogram of waiting times')
+        
+        } else if (input$plot_type == "Density") 
+        
+        {
+          
+          plot(
+            density(x),
+            col = input$color,
+            lwd = 2,
+            xlab = "Waiting time to next eruption (mins)",
+            main = "Density plot of waiting times"
+          )  
+          
+        }
+
+    })
+
+}
+```
+
+---
+
+## Exercise 4: Adding an Intro Tab ✍️
+
+It's always good practice to **explain what your app does**. For this, we can create an *intro tab* — like a README page — that gives your users helpful context.
+
+1. Add a `tabsetPanel()` inside the `mainPanel()`.
+2. Create two tabs:
+
+   * One for the plot
+   * One for the **Introduction**
+3. In the Intro tab, write a short description of what the app does (in plain text or with HTML).
+
+---
+
+### ✅ Solution: Exercise 4
+
+Here’s how your `ui.R` could look after adding the tabs:
+
+```r
+navbarPage("Faithful Geyser Data - Customized", 
+    
+        tabPanel("Intro", 
+          fluidPage(
+            h3("Welcome to the Faithful Geyser Data App!")
+          )
+          ),
+
+tabPanel("Plots",
+    # Sidebar with a slider input for number of bins
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 50,
+                        value = 30), 
+            
+             selectInput("color", "Choose a color:", choices = c("turquoise", "plum", "orchid")),
+            radioButtons("plot_type", "Choose a plot type:",
+                         choices = c("Histogram", "Density"))
+            ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+            plotOutput("distPlot")
+        )
+    )
+)
+)
+```
+
+---
+
+## Exercise 5: Add a Theme ✍️
+
+Want your app to look more polished? Shiny supports easy theming with the `{bslib}` package.
+
+👉 **Your task**: Add a custom theme to your app!
+
+### 🔧 Steps
+
+1. **Load** the `bslib` package in your `global.R` file:
+   ```r
+   library(bslib)
+   ``` 
+   
+   If you don't have it installed, run:
+   ```r
+   install.packages("bslib")
+   ```
+   
+
+2. **Wrap your `navbarPage()`** in a `thematic` Bootstrap theme:
+
+   ```r
+  theme = bs_theme(bootswatch = "minty"),  # Try "minty", "flatly", "journal", etc.
+   )
+   ```
+
+3. **Save** and re-run your app!
+
+---
+
+## Add a Theme ✍️
+
+### ✨ More bootswatch themes
+
+* `"flatly"` (clean + modern)
+* `"darkly"` (dark mode)
+* `"minty"` (playful + bright)
+* `"journal"` (serif style)
+* Full list: [https://bootswatch.com](https://bootswatch.com)
+
+---
+
+## Extra if there is time: Add Download Functionality ✍️
+
+Let’s allow users to **download the dataset** they are exploring!
+
+### 📝 Your task:
+
+* Add a **`downloadButton()`** to the UI so users can download the data.
+* In `server.R`, define a **`downloadHandler()`** to write the `faithful` dataset as a CSV file.
+
+### 🔍 Hint:
+
+- You will use `downloadButton()` in the ui and `downloadHandler()` in the server.
+
+---
+
+## ✅ Solution: Exercise Extra
+
+### `ui.R`
+
+```r
+downloadButton("download_data", "Download Data")
+```
+
+### `server.R`
+
+```
+output$download_data <- downloadHandler(
+  filename = function() { "faithful_data.csv" },
+  content = function(file) {
+    write.csv(faithful, file, row.names = FALSE)
+  }
+)
+```
+
+---
+
+## Thank you! 🙏
+
+![](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGJ5ejdmZXlsZmdraXJ2aWZpamQ3M2t0MG1iZjd4enM3Nm9sZW1iYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KzOey2JYlgHAc/giphy.gif)
+
+---
+
+## Additional Resources 📚
+
+Want to go further with Shiny? Here are some helpful resources:
+
+- 🧪 **Shiny Tutorial** (Official Getting Started Guide)  
+  [https://shiny.posit.co/tutorial](https://shiny.posit.co/tutorial)
+
+- 📘 **Mastering Shiny** by Hadley Wickham (Free online book)  
+  [https://mastering-shiny.org](https://mastering-shiny.org)
+
+- 💡 **Shiny Widgets Gallery**  
+  [https://shiny.posit.co/r/gallery/widgets/widget-gallery/](https://shiny.posit.co/r/gallery/widgets/widget-gallery/)
+
+- 🧩 **Awesome Shiny Extensions** (Community plugins)  
+  [https://github.com/nanxstats/awesome-shiny-extensions](https://github.com/nanxstats/awesome-shiny-extensions)
+  
+- 🌐 **Shiny Community** (Forums, discussions)
+  [https://community.rstudio.com/c/shiny](https://community.rstudio.com/c/shiny)
+
+
