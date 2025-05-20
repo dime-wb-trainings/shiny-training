@@ -45,6 +45,13 @@ function(input, output, session) {
     
   })
   
+  output$download_data <- downloadHandler(
+    filename = function() { "faithful_data.csv" },
+    content = function(file) {
+      write.csv(faithful, file, row.names = FALSE)
+    }
+  )
+  
 }
 
 

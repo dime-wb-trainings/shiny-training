@@ -35,7 +35,8 @@ navbarPage("Faithful Geyser Data - Customized",
                               radioButtons("plotType",
                                            "Select a plot type:",
                                            choices = c("Histogram" = "histogram", "Density" = "density"),
-                                           selected = "histogram")
+                                           selected = "histogram"), 
+                              downloadButton("download_data", "Download Data")
                             ),
                             mainPanel(
                               plotOutput("distPlot")
