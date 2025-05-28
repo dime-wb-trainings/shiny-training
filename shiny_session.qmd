@@ -21,7 +21,7 @@ format:
     # Turn preview links within the presentation off (all links open in a new tab)
     preview-links: false
     # Logo and footer options
-    logo: "logos/Development_Impact.png"
+    logo: "logos/WB-DEC-Impact-horizontal-RGB-high.png"
     footer: "[DIME](https://www.worldbank.org/dime) theme for [Quarto Presentations](https://quarto.org/docs/presentations/revealjs/index.html). Code available on [GitHub](https://github.com/dime-worldbank/quarto-dime-theme)."
     
 ---
