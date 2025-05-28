@@ -99,13 +99,15 @@ A Shiny app has two core components:
 - **UI (User Interface)**: Defines how the app looks
 - **Server**: Defines how the app works
 
-Apps are served to users via a host and port. The R session running the server reacts to user actions, computes results, and sends them back.
+
 
 ![](images/diagram_structure.png)
 
 ---
 
 ## The Client, Host, and Server
+
+Apps are served to users via a host and port. The R session running the server reacts to user actions, computes results, and sends them back.
 
 **Client**: The web browser where the user interacts with the app
 
@@ -164,6 +166,8 @@ knitr::include_graphics("images/single_file.png")
 > Go to the app you just created and let's explore each element
 
 ### 1. `ui` — User Interface
+::::: {.columns}
+::: {.column width="70%"}
 ```{.r source-line-numbers="1"}
 ui <- fluidPage( #<<
   titlePanel("Old Faithful Geyser Data"),
@@ -181,6 +185,14 @@ ui <- fluidPage( #<<
   )
 )
 ```
+:::
+
+::: {.column width="30%"}
+```{r, echo=FALSE}
+knitr::include_graphics("images/fluidpage.png")
+```
+:::
+:::::
 
 **Layout elements**
 
@@ -194,7 +206,10 @@ ui <- fluidPage( #<<
 > Go to the app you just created and let's explore each element
 
 ### 1. `ui` — User Interface
-```r
+
+::::: {.columns}
+::: {.column width="70%"}
+```{.r source-line-numbers="1"}
 ui <- fluidPage(
   titlePanel("Old Faithful Geyser Data"),
   sidebarLayout( #<<
@@ -211,6 +226,14 @@ ui <- fluidPage(
   )
 )
 ```
+:::
+
+::: {.column width="30%"}
+```{r, echo=FALSE}
+knitr::include_graphics("images/sidebarlayout.png")
+```
+:::
+:::::
 
 **Layout elements**
 
@@ -223,7 +246,9 @@ ui <- fluidPage(
 > Go to the app you just created and let's explore each element
 
 ### 1. `ui` — User Interface
-```r
+::::: {.columns}
+::: {.column width="70%"}
+```{.r source-line-numbers="1"}
 ui <- fluidPage(
   titlePanel("Old Faithful Geyser Data"),
   sidebarLayout(
@@ -240,10 +265,18 @@ ui <- fluidPage(
   )
 )
 ```
+:::
+
+::: {.column width="30%"}
+```{r, echo=FALSE}
+knitr::include_graphics("images/sidebarpanel.png")
+```
+:::
+:::::
 
 **Page content**
 
-- **`sidebarPanel()`** contains one input field (`sliderInput()`) called “bins”. As you can infer from the name, this is a slider that lets a user choose a number. In this case, the number of histogram bins.
+- **`sidebarPanel()`** contains one input field (`sliderInput()`) called “bins”. This is a slider that lets a user choose a number. As you can infer from the name, in this case, it's the number of histogram bins.
 
 ---
 
@@ -252,8 +285,9 @@ ui <- fluidPage(
 > Go to the app you just created and let's explore each element
 
 ### 1. `ui` — User Interface
-
-```r
+::::: {.columns}
+::: {.column width="70%"}
+```{.r source-line-numbers="1"}
 ui <- fluidPage(
   titlePanel("Old Faithful Geyser Data"),
   sidebarLayout(
@@ -270,10 +304,64 @@ ui <- fluidPage(
   )
 )
 ```
+:::
+
+::: {.column width="30%"}
+```{r, echo=FALSE}
+knitr::include_graphics("images/mainpanel.png")
+```
+:::
+:::::
 
 **Page content**
 
-- **`mainPanel()`** contains a histogram (`plotOutput()`), which will be defined in the server function. The name of this histogram is “distPlot”
+- **`mainPanel()`** contains a histogram (`plotOutput()`), which will be defined in the server function. The name, or id, of this histogram is **“distPlot”**
+
+---
+
+## Shiny Server Logic Explained ⚙️
+
+### 2. `server` — Server Logic
+
+```r
+server <- function(input, output) {
+...
+}
+```
+
+The `server()` function takes two arguments:
+
+- `input`: a **reactive list** of input values from the UI
+- `output`: a **reactive list** where you assign render functions
+
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/server.png")
+```
+
+**Reactive lists** are "special" lists used in **reactive programming** — a way to make your app **automatically update** outputs when inputs change.
+
+---
+
+## Shiny Server Logic Explained ⚙️
+
+### 2. `server` — Server Logic
+
+```r
+server <- function(input, output) {
+  output$outputId <- renderFunction({
+    value <- input$inputId
+})
+}
+```
+
+Let's take a look at reactivity inside a simple `server( )`:
+
+- **`renderFunction`**: A function like `renderPlot()`, `renderTable()`, etc. used to render an output (a plot, a table...)
+- **`outputId`**: Identifies the rendered output in the output list (`output$`) for the UI
+- The function regenerates **`value`** every time the input field referenced by **inputID** in the **input** list changes.
+
+
 
 ---
 
@@ -293,16 +381,29 @@ server <- function(input, output) {
   })
 }
 ```
-The `server()` function takes two arguments:
 
-- `input`: a **reactive list** of input values from the UI
-- `output`: a **reactive list** where you assign render functions
 
-In the default Shiny app, the server creates one object: the histogram `distPlot`.
 
-- `output$distPlot` → creates the plot output using renderPlot()
-- `input$bins` → pulls the number from the slider input in the UI
+::::: {.columns}
+::: {.column width="50%"}
 
+In our case:
+
+- the server contains the logic to create the histogram `distPlot` in the output list (`output$`), using the render function `renderPlot()`.
+
+- `distPlot`  depends on one user input 
+(`input$bins`), which pulls the number from the slider input in the UI.
+
+:::
+::: {.column width="50%"}
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/server2.png")
+```
+
+ ➡️️ **Result**: the histogram updates as the slider moves!
+:::
+:::::
 ---
 
 ## Shiny Server Logic Explained ⚙️
@@ -311,47 +412,18 @@ In the default Shiny app, the server creates one object: the histogram `distPlot
 
 Remember these connections?
 
-* `output$distPlot <- renderPlot()`
-  ↔ `plotOutput("distPlot")` in the **UI**
 
-* `input$bins`
-  ↔ `sliderInput("bins", ...)` in the **UI**
 
-This is what makes Shiny **reactive** — inputs update outputs automatically!
+| UI        | Server    |
+| --------- | --------- | 
+| `plotOutput("distPlot")`  |`output$distPlot <- renderPlot()`   | 
+| `sliderInput("bins", ...)`  | `input$bins`  | 
 
----
 
-## A Look at Reactivity 🔄
-
-Shiny uses **reactive programming** — a way to make your app **automatically update** outputs when inputs change.
-
-```r
-output$outputId <- renderFunction({
-  # code that returns a value
-})
+```{r, echo=FALSE}
+knitr::include_graphics("images/inputoutput2.png")
+#cat('<img src="images/inputoutput.png" style="width: 100%; height: auto;" />')
 ```
-
-* **`outputId`**: Matches the ID of the output element in the UI (e.g., `plotOutput("distPlot")`)
-* **`renderFunction`**: A special function like `renderPlot()`, `renderTable()`, etc.
-* These automatically re-run whenever a related `input$...` changes!
-
-In our example:
-
-* `sliderInput("bins", ...)` → sets `input$bins`
-* `renderPlot()` → uses `input$bins` to create a histogram
-* Result: the histogram updates as the slider moves!
-
----
-
-## How Inputs and Outputs React 🔁
-
-* **Reactive programming** lets your app respond to changes without needing to re-run code manually.
-* `input` and `output` behave like **reactive lists** — not regular R lists, but special objects in Shiny.
-* When a user selects a value on the slider, say **5**, Shiny stores it as `input$bins = 5`.
-* If the user changes it to **7**, Shiny automatically updates the `input` list — and any **render function** using it will re-execute.
-* This is why `output$distPlot <- renderPlot({ ... input$bins ... })` updates **instantly**.
-
-Together, `input`, `output`, and `render*()` functions form the **reactive backbone** of your app.
 
 ---
 
@@ -370,6 +442,20 @@ Shiny apps are built by connecting **inputs** (from the UI) to **outputs** (rend
 * `output$... <- render...()` generates dynamic content
 
 ---
+
+## A recap on Reactivity 🔁
+
+* **Reactive programming** lets your app respond to changes without needing to re-run code manually.
+* `input` and `output` behave like **reactive lists** — not regular R lists, but special objects in Shiny.
+* When a user selects a value on the slider, say **5**, Shiny stores it as `input$bins = 5`.
+* If the user changes it to **7**, Shiny automatically updates the `input` list — and any **render function** using it will re-execute.
+* This is why `output$distPlot <- renderPlot({ ... input$bins ... })` updates **instantly**.
+
+Together, `input`, `output`, and `render*()` functions form the **reactive backbone** of your app.
+
+---
+
+
 
 ## Common Input Widgets 🛠️️
 
@@ -765,35 +851,24 @@ output$download_data <- downloadHandler(
 
 ---
 
-## Share your Shiny app 
+## Share your Shiny app
 
-### 🏢 On-Premises & VPC Deployment (Most Secure)
+- 🏢 **Posit Connect Internal Server**  
+  - Recommended option for **secure deployment within the Bank**
+  - Content is deployed on Bank server behind a firewall, **only accessible to Bank employees**
+  
+  
+- 🌐 **Posit Connect Public Server**  
+  - Content is deployed on Bank server behind a firewall, but accessible to all. 
+  - **Only display public use data**
 
-- **Posit Connect (Internal / Commercial)**  
-  - Recommended option for **secure deployment within the Bank**  
-  - Push-button publishing from RStudio  
+For both:
+
+  - Push-button publishing from RStudio or publish directly from GitHub 
+  
+  - Request Posit Connect access as a Software Request
+  
   - [Learn more](https://posit.co/products/enterprise/connect/)
-
-- **Shiny Server (Open Source)**  
-  - Deploy behind a firewall  
-  - Ideal for lightweight internal hosting  
-  - [More info](https://posit.co/download/shiny-server/)
-
----
-
-## Share your Shiny app 
-
-### 🌐 Cloud Deployment Options
-
-- **Posit Connect Cloud**  
-  - Publish from GitHub in under a minute  
-  - [Free and paid plans](https://posit.cloud/connect)
-
-- **Shinyapps.io**  
-  - Easiest way to publish Shiny apps online  
-  - No server setup or installation needed  
-  - Secure and scalable, but **not for sensitive data**  
-  - [Free and paid plans](https://www.shinyapps.io/)
 
 ---
 
