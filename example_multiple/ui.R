@@ -40,4 +40,12 @@ navbarPage("Faithful Geyser Data - Customized",
             plotOutput("distPlot")
         )
     )
-))
+),
+tabPanel("Table",
+         fluidPage(
+             h2("Faithful Geyser Data Table"),
+             p("Below is the table of the Old Faithful geyser data. You can view the waiting times between eruptions."),
+             tableOutput("data_table")
+         )
+)
+)

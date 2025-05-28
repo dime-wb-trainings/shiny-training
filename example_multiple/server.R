@@ -41,5 +41,9 @@ function(input, output, session) {
         write.csv(faithful, file, row.names = FALSE)
       }
     )
+    
+    output$data_table <- renderTable({
+        faithful
+    })
 
 }

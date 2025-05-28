@@ -21,7 +21,7 @@ format:
     # Turn preview links within the presentation off (all links open in a new tab)
     preview-links: false
     # Logo and footer options
-    logo: "logos/DIME_ANALYTICS.png"
+    logo: "logos/Development_Impact.png"
     footer: "[DIME](https://www.worldbank.org/dime) theme for [Quarto Presentations](https://quarto.org/docs/presentations/revealjs/index.html). Code available on [GitHub](https://github.com/dime-worldbank/quarto-dime-theme)."
     
 ---
@@ -840,6 +840,48 @@ output$download_data <- downloadHandler(
 
 ---
 
+## Exercise Extra 2: Add Table Tab✍️
+
+Let’s add a new tab to display the `faithful` dataset as a table.
+
+### 📝 Your task:
+
+* Create a new tab in `ui.R` called "Table".
+* In the new tab, use `tableOutput("data_table")` to display the dataset.
+* In `server.R`, create a new output called `data_table` that renders the `faithful` dataset as a table.
+
+### 🔍 Hint:
+- Use `renderTable()` in the server to display the dataset.
+
+---
+
+## ✅ Solution: Exercise Extra 2
+
+### `ui.R`
+
+```r
+tabPanel("Table",
+         fluidPage(
+             h2("Faithful Geyser Data Table"),
+             p("Below is the table of the Old Faithful geyser data. You can view the waiting times between eruptions."),
+             tableOutput("data_table")
+         )
+)
+```
+
+### `server.R`
+
+```r
+output$data_table <- renderTable({
+  faithful
+})
+```
+
+- The multiple file app with all the exercises we did is available [here](https://github.com/dime-wb-trainings/shiny-training/tree/main/example_multiple)
+- Note: this is not super aesthetic, but you can use packages like `{DT}` or `{reactable}` to make it look better.
+
+---
+
 ## Share your Shiny app
 
 - 🏢 **Posit Connect Internal Server**  
@@ -882,6 +924,8 @@ Want to go further with Shiny? Here are some helpful resources:
 - 🌐 **Shiny Community** (Forums, discussions) [here](https://community.rstudio.com/c/shiny)
   
 - 📦 **Building Web Applications** (Training) [here](https://rstudio-education.github.io/shiny-course/)
+
+- 🧱 **Adding multiple objects in layout** [here](https://shiny.posit.co/r/reference/shiny/0.14/column.html)
 
 ---
 
