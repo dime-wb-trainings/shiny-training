@@ -8,39 +8,36 @@
 #
 
 
-
-# Define UI using navbarPage
-navbarPage("Faithful Geyser Data - Customized",
+# Define UI for application that draws a histogram
+navbarPage("Faithful Geyser Data - Customized", 
            theme = bs_theme(bootswatch = "minty"),
-                 tabPanel("Introduction",
-                          fluidPage(
-                            h3("Welcome!"),
-                            p("This is a Shiny app that allows you to visualize the waiting times of the Old Faithful geyser in Yellowstone National Park."),
-                            p("Use the sidebar controls in the 'Plot' tab to change the number of bins, the color of the graph, and the type of plot."),
-                            p("This intro page is useful for explaining your app to users before they interact with it.")
-                          )
-                 ),
-                 
-                 tabPanel("Plot",
-                          sidebarLayout(
-                            sidebarPanel(
-                              sliderInput("bins",
-                                          "Number of bins:",
-                                          min = 1,
-                                          max = 50,
-                                          value = 30), 
-                              selectInput("color", "Choose a color:", 
-                                          choices = c("turquoise", "plum", "orchid"),
-                                          selected = "turquoise"),
-                              radioButtons("plotType",
-                                           "Select a plot type:",
-                                           choices = c("Histogram" = "histogram", "Density" = "density"),
-                                           selected = "histogram"), 
-                              downloadButton("download_data", "Download Data")
-                            ),
-                            mainPanel(
-                              plotOutput("distPlot")
-                            )
-                          )
-                 )
-)
+           tabPanel("Introduction", 
+                    fluidPage(
+                        h2("Exploring the Faithful Geyser Data"),
+                        p("This application allows you to visualize the waiting times between eruptions of the Old Faithful geyser. 
+                          You can choose between a histogram and a density plot, adjust the number of bins, and select a color for the plot.")
+                  
+                    )), 
+
+    tabPanel("Plots",
+
+    # Sidebar with a slider input for number of bins
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 50,
+                        value = 30), 
+            selectInput("color", "Choose a color:", choices = c("turquoise", "plum", "orchid")),
+            radioButtons("plot_type", "Choose a plot type:",
+                         choices = c("Histogram", "Density")), 
+            downloadButton("download_data", "Download Data")
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+            plotOutput("distPlot")
+        )
+    )
+))

@@ -7,51 +7,39 @@
 #    https://shiny.posit.co/
 #
 
-library(shiny)
 
+# Define server logic required to draw a histogram
 function(input, output, session) {
-  
-  output$distPlot <- renderPlot({
+
+    output$distPlot <- renderPlot({
+
+        # generate bins based on input$bins from ui.R
+        x    <- faithful[, 2]
+        
+        if (input$plot_type == "Histogram") {
+        
+        bins <- seq(min(x), max(x), length.out = input$bins + 1)
+
+        # draw the histogram with the specified number of bins
+        hist(x, breaks = bins, col = input$color, border = 'white',
+             xlab = 'Waiting time to next eruption (in mins)',
+             main = 'Histogram of waiting times')
+        } else if (input$plot_type == "Density") 
+          {
+          ggplot(faithful, aes(x=x)) +
+            geom_density(alpha = 0.5, color = input$color) +
+            labs(x = 'Waiting time to next eruption (in mins)', 
+                 title = 'Density Plot of Waiting Times') +
+            theme_minimal() 
+          }
+
+    })
     
-    waiting_times <- faithful$waiting
-    
-    if (input$plotType == "histogram") {
-      
-      bins <- seq(min(waiting_times), max(waiting_times), length.out = input$bins + 1)
-      
-      hist(
-        waiting_times,
-        breaks = bins,
-        col = input$color,
-        border = "white",
-        xlab = "Waiting time to next eruption (mins)",
-        main = "Histogram of waiting times"
-      )
-      
-    } else if (input$plotType == "density") {
-      
-      plot(
-        density(waiting_times),
-        col = input$color,
-        lwd = 2,
-        xlab = "Waiting time to next eruption (mins)",
-        main = "Density plot of waiting times"
-      )
-      
-    } else {
-      plot.new()
-      text(0.5, 0.5, "Unknown plot type selected", cex = 1.2)
-    }
-    
-  })
-  
-  output$download_data <- downloadHandler(
-    filename = function() { "faithful_data.csv" },
-    content = function(file) {
-      write.csv(faithful, file, row.names = FALSE)
-    }
-  )
-  
+    output$download_data <- downloadHandler(
+      filename = function() { "faithful_data.csv" },
+      content = function(file) {
+        write.csv(faithful, file, row.names = FALSE)
+      }
+    )
+
 }
-
-

@@ -196,7 +196,7 @@ knitr::include_graphics("images/fluidpage.png")
 
 **Layout elements**
 
-- **`fluidPage()`** is the container for the app interface, the layout in which your content is. This is the most common, but there are other types of layouts.
+- **`fluidPage()`** is the container for the app interface, the layout in which your content is. This is the most common, but there are other types of layouts. Check [here](https://shiny.posit.co/r/articles/build/layout-guide/)
 
 
 ---
@@ -479,6 +479,7 @@ Shiny includes many built-in **widgets** to capture user input:
 
 ## Let's start with some basic modifications  ✍️
 
+
 ### 1. Change the title of the app
 ### 2. Change the number of bins to 20
 ### 3. Change the color of the histogram to `#ca8dfd` (a shade of purple)
@@ -563,8 +564,6 @@ This file is useful for loading packages and defining global objects or function
 
 5\. Click the **Run App** button in the top-right corner of RStudio.
 
-Here’s a clearer and more engaging version of your slide:
-
 ---
 
 ## ✨ Now Let’s Make It More Interesting
@@ -597,7 +596,7 @@ Let’s improve the layout and presentation of your app!
 * In `ui.R`, replace the `titlePanel()` with:
 
   * A custom **title** 
-  * A smaller **subtitle** using `h3()``
+  * A smaller **subtitle** using `h3()`
 
 ### 🔍 Hint:
 
@@ -620,10 +619,17 @@ Let’s make the histogram more interactive!
 
 ### 🔍 Hint:
 
+UI:
+
 ```r
  selectInput("color", "Choose a color:", choices = c("turquoise", "plum", "orchid"))
 ```
 
+Server: 
+
+```r
+col = input$color
+```     
 
 ---
 
@@ -648,36 +654,25 @@ Ok! now let's make this more challenging! Let’s give the user control over the
 * Add a `radioButtons()` input to let the user choose between:
 
   * `"Histogram"` of waiting times
-  * `"Scatterplot"` of eruption duration vs. waiting time
+  * `"Density` of eruption duration vs. waiting time
 * Modify `renderPlot()` in `server.R` to change behavior based on selection
 
 ### 🔍 Hint:
 
+UI:
+
 ```r
 radioButtons("plot_type", "Choose a plot type:",
-             choices = c("Histogram", "Scatterplot"))
+             choices = c("Histogram", "Density"))
 ```
 
 In `server.R`, check the value of `input$plot_type` to decide which plot to draw.
 
 ---
 
-## ✅ Solution: Exercise 3
-
-### `ui.R`
-
-```r
-radioButtons("plot_type",
-             "Select a plot type:",
-             choices = c("Histogram" = "histogram", "Density" = "density"),
-             selected = "histogram")
-```
-
----
-
 ## ✅ Solution: Exercise 3  
 
-Full server logig: 
+Full server logic: 
 
 ### `server.R`
 
@@ -687,7 +682,7 @@ function(input, output, session) {
     output$distPlot <- renderPlot({
 
         # generate bins based on input$bins from ui.R
-         x  <- faithful[, 2]
+        x    <- faithful[, 2]
         
         if (input$plot_type == "Histogram") {
         
@@ -697,20 +692,14 @@ function(input, output, session) {
         hist(x, breaks = bins, col = input$color, border = 'white',
              xlab = 'Waiting time to next eruption (in mins)',
              main = 'Histogram of waiting times')
-        
         } else if (input$plot_type == "Density") 
-        
-        {
-          
-          plot(
-            density(x),
-            col = input$color,
-            lwd = 2,
-            xlab = "Waiting time to next eruption (mins)",
-            main = "Density plot of waiting times"
-          )  
-          
-        }
+          {
+          ggplot(faithful, aes(x=x)) +
+            geom_density(alpha = 0.5, color = input$color) +
+            labs(x = 'Waiting time to next eruption (in mins)', 
+                 title = 'Density Plot of Waiting Times') +
+            theme_minimal() 
+          }
 
     })
 
@@ -737,15 +726,18 @@ It's always good practice to **explain what your app does**. For this, we can cr
 Here’s how your `ui.R` could look after adding the tabs:
 
 ```r
+# Define UI for application that draws a histogram
 navbarPage("Faithful Geyser Data - Customized", 
-    
-        tabPanel("Intro", 
-          fluidPage(
-            h3("Welcome to the Faithful Geyser Data App!")
-          )
-          ),
+           tabPanel("Introduction", 
+                    fluidPage(
+                        h2("Exploring the Faithful Geyser Data"),
+                        p("This application allows you to visualize the waiting times between eruptions of the Old Faithful geyser. 
+                          You can choose between a histogram and a density plot, adjust the number of bins, and select a color for the plot.")
+                  
+                    )), 
 
-tabPanel("Plots",
+    tabPanel("Plots",
+
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
@@ -754,19 +746,17 @@ tabPanel("Plots",
                         min = 1,
                         max = 50,
                         value = 30), 
-            
-             selectInput("color", "Choose a color:", choices = c("turquoise", "plum", "orchid")),
+            selectInput("color", "Choose a color:", choices = c("turquoise", "plum", "orchid")),
             radioButtons("plot_type", "Choose a plot type:",
                          choices = c("Histogram", "Density"))
-            ),
+        ),
 
         # Show a plot of the generated distribution
         mainPanel(
             plotOutput("distPlot")
         )
     )
-)
-)
+))
 ```
 
 ---
@@ -790,11 +780,10 @@ Want your app to look more polished? Shiny supports easy theming with the `{bsli
    ```
    
 
-2. **Wrap your `navbarPage()`** in a `thematic` Bootstrap theme:
+2. **Wrap your `navbarPage()`** in a `thematic` Bootstrap theme `ui.R` file:
 
    ```r
-  theme = bs_theme(bootswatch = "minty"),  # Try "minty", "flatly", "journal", etc.
-   )
+  theme = bs_theme(bootswatch = "minty") # Try "minty", "flatly", "journal", etc.
    ```
 
 3. **Save** and re-run your app!
@@ -894,5 +883,18 @@ Want to go further with Shiny? Here are some helpful resources:
   
 - 📦 **Building Web Applications** (Training) [here](https://rstudio-education.github.io/shiny-course/)
 
+---
+
+## Some examples ✨
+
+- Shiny App Gallery [here](https://shiny.posit.co/r/gallery/)
+
+- California Schools Climate Hazards Dashboard [here](https://schoolclimatehazards.grit.ucsb.edu/)
+
+- New Zealand Trade Intelligence Dashboard [here](https://gallery.shinyapps.io/nz-trade-dash)
+
+- Locating Blood Banks in India [here](https://opndt.shinyapps.io/bloodbank_india/)
+
+- Understanding voters’ profile in Brazilian elections [here](https://shiny.posit.co/r/gallery/government-public-sector/brazil-voter-profile/)
 
 
