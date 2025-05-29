@@ -729,34 +729,33 @@ Here’s how your `ui.R` could look after adding the tabs:
 # Define UI for application that draws a histogram
 navbarPage("Faithful Geyser Data - Customized", 
            tabPanel("Introduction", 
-                    fluidPage(
-                        h2("Exploring the Faithful Geyser Data"),
-                        p("This application allows you to visualize the waiting times between eruptions of the Old Faithful geyser. 
+                      h3("Exploring the Faithful Geyser Data"),
+                      p("This application allows you to visualize the waiting times between eruptions of the Old Faithful geyser. 
                           You can choose between a histogram and a density plot, adjust the number of bins, and select a color for the plot.")
-                  
-                    )), 
-
-    tabPanel("Plots",
-
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30), 
-            selectInput("color", "Choose a color:", choices = c("turquoise", "plum", "orchid")),
-            radioButtons("plot_type", "Choose a plot type:",
-                         choices = c("Histogram", "Density"))
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("distPlot")
-        )
-    )
-))
+                      
+                    ), 
+           
+           tabPanel("Plots",
+                    
+                    # Sidebar with a slider input for number of bins
+                    sidebarLayout(
+                      sidebarPanel(
+                        sliderInput("bins",
+                                    "Number of bins:",
+                                    min = 1,
+                                    max = 50,
+                                    value = 30), 
+                        selectInput("color", "Choose a color:", choices = c("turquoise", "plum", "orchid")),
+                        radioButtons("plot_type", "Choose a plot type:",
+                                     choices = c("Histogram", "Density"))
+                      ),
+                      
+                      # Show a plot of the generated distribution
+                      mainPanel(
+                        plotOutput("distPlot")
+                      )
+                    )
+           ))
 ```
 
 ---
@@ -861,12 +860,9 @@ Let’s add a new tab to display the `faithful` dataset as a table.
 
 ```r
 tabPanel("Table",
-         fluidPage(
              h2("Faithful Geyser Data Table"),
              p("Below is the table of the Old Faithful geyser data. You can view the waiting times between eruptions."),
-             tableOutput("data_table")
-         )
-)
+             tableOutput("data_table"))
 ```
 
 ### `server.R`
@@ -899,7 +895,17 @@ For both:
   
   - Request Posit Connect access as a Software Request
   
-  - [Learn more](https://posit.co/products/enterprise/connect/)
+  - [Learn more](https://posit.co/products/enterprise/connect/), [Internal Resources](https://w0lxdrconn01.worldbank.org/user-guide/wb-connect-users-guide.html)
+  
+---
+  
+## Share your Shiny app 
+  
+  
+```{r, echo=FALSE, out.width='50%'}
+knitr::include_graphics("images/posit_connect.png")
+```
+  
 
 ---
 
