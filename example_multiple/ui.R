@@ -12,12 +12,11 @@
 navbarPage("Faithful Geyser Data - Customized", 
            theme = bs_theme(bootswatch = "minty"),
            tabPanel("Introduction", 
-                    fluidPage(
-                        h2("Exploring the Faithful Geyser Data"),
+                        h3("Exploring the Faithful Geyser Data"),
                         p("This application allows you to visualize the waiting times between eruptions of the Old Faithful geyser. 
                           You can choose between a histogram and a density plot, adjust the number of bins, and select a color for the plot.")
                   
-                    )), 
+                    ), 
 
     tabPanel("Plots",
 
@@ -42,10 +41,9 @@ navbarPage("Faithful Geyser Data - Customized",
     )
 ),
 tabPanel("Table",
-         fluidPage(
              h2("Faithful Geyser Data Table"),
              p("Below is the table of the Old Faithful geyser data. You can view the waiting times between eruptions."),
              tableOutput("data_table")
          )
 )
-)
+
